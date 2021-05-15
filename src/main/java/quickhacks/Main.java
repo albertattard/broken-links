@@ -30,8 +30,6 @@ public class Main {
         pending.add(startLink);
 
         final Set<String> visited = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
-        /* Adding the start link to see whether this is ignored or not. This will be removed. */
-        visited.add(startLink);
 
         while (pending.isEmpty() == false) {
 
@@ -57,14 +55,17 @@ public class Main {
             /* We only need to check that links to other sites work, but we don't need to follow them.
                Thus we don't have to parse them. */
             if (pageLink.startsWith(startLink) == false) {
-                System.out.printf("Will not follow link: %s%n", pageLink);
+                System.out.printf("Will not follow link %s%n", pageLink);
                 continue;
             }
 
-            System.out.println("Found the following links:");
+            System.out.printf("Following link %s%n", pageLink);
             final Document document = Jsoup.parse(response.body());
             for (Element a : document.select("a[href~=http(s|)://.+]")) {
-                System.out.printf("  > %s%n", a.attr("href"));
+                final String link = a.attr("href");
+                if (false == visited.contains(link) && false == pending.contains(link)) {
+                    pending.add(link);
+                }
             }
         }
     }
