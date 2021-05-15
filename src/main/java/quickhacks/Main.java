@@ -25,7 +25,10 @@ public class Main {
         final String startLink = "https://albertattard.github.io/quickhacks/";
 
         final List<String> pending = new ArrayList<>();
-        pending.add(startLink);
+        /* Start with an external link on purpose, so that I make sure that this is not followed.
+           This will be removed later on. */
+        // pending.add(startLink);
+        pending.add("https://mvnrepository.com/");
 
         while (pending.isEmpty() == false) {
 
@@ -39,6 +42,13 @@ public class Main {
             if (response.statusCode() >= 400) {
                 System.out.printf("Broken link %s%n", pageLink);
                 return;
+            }
+
+            /* We only need to check that links to other sites work, but we don't need to follow them.
+               Thus we don't have to parse them. */
+            if (pageLink.startsWith(startLink) == false) {
+                System.out.printf("Will not follow link: %s%n", pageLink);
+                continue;
             }
 
             System.out.println("Found the following links:");
