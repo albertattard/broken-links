@@ -1,5 +1,9 @@
 package quickhacks;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -23,6 +27,11 @@ public class Main {
                 .build();
 
         final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        System.out.println(response.body());
+
+        System.out.println("Found the following links:");
+        final Document document = Jsoup.parse(response.body());
+        for (Element a : document.select("a[href]")) {
+            System.out.printf("  > %s%n", a.attr("href"));
+        }
     }
 }
