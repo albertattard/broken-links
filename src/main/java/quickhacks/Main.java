@@ -12,6 +12,8 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class Main {
 
@@ -25,14 +27,22 @@ public class Main {
         final String startLink = "https://albertattard.github.io/quickhacks/";
 
         final List<String> pending = new ArrayList<>();
-        /* Start with an external link on purpose, so that I make sure that this is not followed.
-           This will be removed later on. */
-        // pending.add(startLink);
-        pending.add("https://mvnrepository.com/");
+        pending.add(startLink);
+
+        final Set<String> visited = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+        /* Adding the start link to see whether this is ignored or not. This will be removed. */
+        visited.add(startLink);
 
         while (pending.isEmpty() == false) {
 
             final String pageLink = pending.remove(0);
+
+            /* Ignore links that were already visited */
+            if (visited.add(pageLink) == false) {
+                System.out.printf("Link already visited %s%n", pageLink);
+                continue;
+            }
+
             final HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(pageLink))
                     .timeout(Duration.ofSeconds(5))
