@@ -31,6 +31,9 @@ public class Main {
 
         final Set<String> visited = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 
+        int testedLinks = 0;
+        int brokenLinks = 0;
+
         while (pending.isEmpty() == false) {
 
             final String pageLink = pending.remove(0);
@@ -47,7 +50,10 @@ public class Main {
                     .build();
 
             final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            testedLinks++;
             if (response.statusCode() >= 400) {
+                brokenLinks++;
                 System.out.printf("Broken link %s%n", pageLink);
                 return;
             }
@@ -68,5 +74,7 @@ public class Main {
                 }
             }
         }
+
+        System.out.printf("Found %d broken links out of %d tested links%n", brokenLinks, testedLinks);
     }
 }
