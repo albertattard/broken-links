@@ -1,0 +1,20 @@
+plugins {
+    id "java"
+    id "application"
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(16)
+    }
+}
+
+application {
+    mainClass = "quickhacks.Main"
+}
+
+jar {
+    manifest {
+        attributes("Main-class": "quickhacks.Main")
+    }
+}
