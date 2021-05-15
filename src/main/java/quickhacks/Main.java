@@ -20,13 +20,17 @@ public class Main {
                 .connectTimeout(Duration.ofSeconds(5))
                 .build();
 
-        final String pageLink = "https://albertattard.github.io/quickhacks/";
+        final String pageLink = "https://albertattard.github.io/quickhacks/some-page-that-does-not-exists";
         final HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(pageLink))
                 .timeout(Duration.ofSeconds(5))
                 .build();
 
         final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() >= 400) {
+            System.out.printf("Broken link %s%n", pageLink);
+            return;
+        }
 
         System.out.println("Found the following links:");
         final Document document = Jsoup.parse(response.body());
