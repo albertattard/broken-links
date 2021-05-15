@@ -43,7 +43,7 @@ public class Main {
 
             System.out.println("Found the following links:");
             final Document document = Jsoup.parse(response.body());
-            for (Element a : document.select("a[href]")) {
+            for (Element a : document.select("a[href~=http(s|)://.+]")) {
                 System.out.printf("  > %s%n", a.attr("href"));
             }
         }
