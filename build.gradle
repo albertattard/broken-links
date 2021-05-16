@@ -1,7 +1,6 @@
 plugins {
     id "java"
     id "application"
-    id "com.github.johnrengelman.shadow" version "7.0.0"
 }
 
 java {
@@ -12,12 +11,4 @@ java {
 
 application {
     mainClass = "quickhacks.Main"
-}
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    implementation 'org.jsoup:jsoup:1.13.1'
 }
