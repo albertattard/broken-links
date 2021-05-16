@@ -43,6 +43,14 @@ configurations {
     testEndToEndRuntimeOnly.extendsFrom testRuntimeOnly
 }
 
+test {
+    useJUnitPlatform()
+
+    testLogging {
+        events = ['FAILED', 'PASSED', 'SKIPPED', 'STANDARD_OUT']
+    }
+}
+
 task testEndToEnd(type: Test) {
     group = 'verification'
     description = 'Runs the End-to-End tests.'
@@ -70,4 +78,5 @@ repositories {
 dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter:5.8.0-M1"
     testImplementation "org.assertj:assertj-core:3.19.0"
+    testImplementation "org.mock-server:mockserver-junit-jupiter:5.11.2"
 }
