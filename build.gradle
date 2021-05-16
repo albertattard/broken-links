@@ -1,6 +1,7 @@
 plugins {
     id "java"
     id "application"
+    id "idea"
 }
 
 java {
@@ -11,4 +12,56 @@ java {
 
 application {
     mainClass = "quickhacks.Main"
+}
+
+sourceSets {
+    testEndToEnd {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/testEndToEnd/java')
+        }
+        resources.srcDir file('src/testEndToEnd/resources')
+    }
+}
+
+idea {
+    module {
+        testSourceDirs += project.sourceSets.testEndToEnd.java.srcDirs
+        testSourceDirs += project.sourceSets.testEndToEnd.resources.srcDirs
+    }
+}
+
+configurations {
+    testEndToEndImplementation.extendsFrom testImplementation
+    testEndToEndRuntimeOnly.extendsFrom testRuntimeOnly
+}
+
+task testEndToEnd(type: Test) {
+    group = 'verification'
+    description = 'Runs the End-to-End tests.'
+    testClassesDirs = sourceSets.testEndToEnd.output.classesDirs
+    classpath = sourceSets.testEndToEnd.runtimeClasspath
+    outputs.upToDateWhen { false }
+    dependsOn jar
+    shouldRunAfter test
+
+    useJUnitPlatform()
+
+    testLogging {
+        events = ['FAILED', 'PASSED', 'SKIPPED', 'STANDARD_OUT']
+    }
+}
+
+check {
+    dependsOn testEndToEnd
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation "org.junit.jupiter:junit-jupiter:5.8.0-M1"
+    testImplementation "org.assertj:assertj-core:3.19.0"
 }
